@@ -20,3 +20,16 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+
+
+from django.contrib import admin
+from django.urls import path
+from django.http import HttpResponse   # ← ADD THIS
+
+def home(request):                    # ← ADD THIS
+    return HttpResponse("My app is live on Render!")
+
+urlpatterns = [
+    path('', home),                   # ← ADD THIS
+    path('admin/', admin.site.urls),
+]
