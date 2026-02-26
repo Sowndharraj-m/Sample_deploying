@@ -1,0 +1,149 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}Sign Up | MySite{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .auth-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 200px);
+        padding: 40px 0;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 460px;
+        padding: 48px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        backdrop-filter: blur(20px);
+        animation: fadeInUp 0.6s ease;
+    }
+
+    .auth-card h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .auth-card h1 span {
+        background: linear-gradient(135deg, var(--primary-light), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .auth-subtitle {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        margin-bottom: 36px;
+    }
+
+    .auth-divider {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 28px 0;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 28px;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    .auth-footer a {
+        color: var(--primary-light);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s;
+    }
+
+    .auth-footer a:hover {
+        color: var(--accent);
+    }
+
+    @media (max-width: 480px) {
+        .auth-card {
+            padding: 32px 24px;
+            margin: 0 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="auth-wrapper">
+    <div class="auth-card">
+        <h1>Create <span>Account</span></h1>
+        <p class="auth-subtitle">Join us and start building something great</p>
+
+        <form method="POST" action="{% url 'signup' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" placeholder="Choose a username" required autofocus
+                    value="{{ form.username.value|default:'' }}" maxlength="150">
+                {% if form.username.errors %}
+                <ul class="errorlist">
+                    {% for error in form.username.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password1">Password</label>
+                <input type="password" name="password1" id="id_password1" placeholder="Create a strong password"
+                    required>
+                {% if form.password1.errors %}
+                <ul class="errorlist">
+                    {% for error in form.password1.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password2">Confirm Password</label>
+                <input type="password" name="password2" id="id_password2" placeholder="Enter password again" required>
+                {% if form.password2.errors %}
+                <ul class="errorlist">
+                    {% for error in form.password2.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-primary btn-full">Create Account →</button>
+        </form>
+
+        <div class="auth-divider">or</div>
+
+        <p class="auth-footer">
+            Already have an account? <a href="{% url 'login' %}">Sign in</a>
+        </p>
+    </div>
+</section>
+{% endblock %}

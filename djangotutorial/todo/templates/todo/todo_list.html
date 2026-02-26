@@ -1,0 +1,373 @@
+{% extends 'pages/base.html' %}
+
+{% block title %}My Todos | MySite{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .todo-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 60px 0 100px;
+        animation: fadeInUp 0.6s ease;
+    }
+
+    .todo-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+    }
+
+    .todo-header h1 {
+        font-size: 2.25rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .todo-header h1 span {
+        background: linear-gradient(135deg, var(--primary-light), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Stats */
+    .todo-stats {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+
+    .stat-chip {
+        padding: 8px 18px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 50px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        backdrop-filter: blur(10px);
+    }
+
+    .stat-chip strong {
+        color: var(--accent);
+    }
+
+    .stat-chip.completed strong {
+        color: var(--success);
+    }
+
+    .stat-chip.pending strong {
+        color: var(--warning);
+    }
+
+    /* Add Form */
+    .add-form {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 32px;
+    }
+
+    .add-form input[type="text"] {
+        flex: 1;
+        padding: 14px 18px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font-size: 1rem;
+        font-family: 'Inter', sans-serif;
+        outline: none;
+        transition: all 0.3s;
+    }
+
+    .add-form input[type="text"]:focus {
+        border-color: var(--border-focus);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .add-form input[type="text"]::placeholder {
+        color: rgba(148, 163, 184, 0.5);
+    }
+
+    .add-btn {
+        padding: 14px 28px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-family: 'Inter', sans-serif;
+        white-space: nowrap;
+    }
+
+    .add-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+    }
+
+    /* Todo List */
+    .todo-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .todo-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 18px 24px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s;
+        animation: fadeInUp 0.4s ease;
+    }
+
+    .todo-item:hover {
+        border-color: rgba(99, 102, 241, 0.2);
+        background: var(--bg-card-hover);
+    }
+
+    .todo-item.done {
+        opacity: 0.6;
+    }
+
+    .todo-item.done .todo-title {
+        text-decoration: line-through;
+        color: var(--text-secondary);
+    }
+
+    /* Custom checkbox */
+    .todo-check {
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+        border: 2px solid var(--border);
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        text-decoration: none;
+        color: transparent;
+        font-size: 14px;
+    }
+
+    .todo-check:hover {
+        border-color: var(--primary-light);
+        background: rgba(99, 102, 241, 0.1);
+    }
+
+    .todo-check.checked {
+        background: var(--success);
+        border-color: var(--success);
+        color: white;
+    }
+
+    .todo-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .todo-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+    }
+
+    .todo-desc {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        line-height: 1.4;
+    }
+
+    .todo-meta {
+        font-size: 0.75rem;
+        color: rgba(148, 163, 184, 0.6);
+        margin-top: 4px;
+    }
+
+    .todo-delete {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--text-secondary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+        text-decoration: none;
+        flex-shrink: 0;
+    }
+
+    .todo-delete:hover {
+        background: rgba(239, 68, 68, 0.15);
+        border-color: rgba(239, 68, 68, 0.3);
+        color: var(--danger);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 80px 24px;
+        animation: fadeInUp 0.6s ease;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+    }
+
+    .empty-state p {
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+
+    /* Description toggle */
+    .add-desc-toggle {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        cursor: pointer;
+        padding: 4px 0;
+        margin-bottom: 12px;
+        font-family: 'Inter', sans-serif;
+        transition: color 0.3s;
+    }
+
+    .add-desc-toggle:hover {
+        color: var(--primary-light);
+    }
+
+    .desc-input {
+        width: 100%;
+        padding: 12px 18px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        font-family: 'Inter', sans-serif;
+        outline: none;
+        transition: all 0.3s;
+        margin-bottom: 12px;
+        resize: none;
+        height: 60px;
+        display: none;
+    }
+
+    .desc-input:focus {
+        border-color: var(--border-focus);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .desc-input::placeholder {
+        color: rgba(148, 163, 184, 0.5);
+    }
+
+    @media (max-width: 640px) {
+        .todo-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .todo-stats {
+            flex-wrap: wrap;
+        }
+
+        .add-form {
+            flex-direction: column;
+        }
+
+        .add-btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="todo-container">
+    <!-- Header -->
+    <div class="todo-header">
+        <h1>My <span>Todos</span></h1>
+    </div>
+
+    <!-- Stats -->
+    <div class="todo-stats">
+        <div class="stat-chip">Total: <strong>{{ total }}</strong></div>
+        <div class="stat-chip completed">Done: <strong>{{ completed }}</strong></div>
+        <div class="stat-chip pending">Pending: <strong>{{ pending }}</strong></div>
+    </div>
+
+    <!-- Add Form -->
+    <form method="POST" action="{% url 'todo_add' %}">
+        {% csrf_token %}
+        <div class="add-form">
+            <input type="text" name="title" placeholder="What needs to be done?" required autofocus>
+            <button type="submit" class="add-btn">+ Add Task</button>
+        </div>
+        <button type="button" class="add-desc-toggle" onclick="toggleDesc()">+ Add description</button>
+        <textarea name="description" class="desc-input" id="descInput" placeholder="Optional description..."></textarea>
+    </form>
+
+    <!-- Todo List -->
+    {% if todos %}
+    <div class="todo-list">
+        {% for todo in todos %}
+        <div class="todo-item {% if todo.completed %}done{% endif %}">
+            <a href="{% url 'todo_toggle' todo.id %}" class="todo-check {% if todo.completed %}checked{% endif %}">
+                {% if todo.completed %}✓{% endif %}
+            </a>
+            <div class="todo-content">
+                <div class="todo-title">{{ todo.title }}</div>
+                {% if todo.description %}
+                <div class="todo-desc">{{ todo.description }}</div>
+                {% endif %}
+                <div class="todo-meta">{{ todo.created_at|timesince }} ago</div>
+            </div>
+            <a href="{% url 'todo_delete' todo.id %}" class="todo-delete" title="Delete">🗑</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <h2>No tasks yet!</h2>
+        <p>Add your first task above to get started.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function toggleDesc() {
+        const desc = document.getElementById('descInput');
+        desc.style.display = desc.style.display === 'block' ? 'none' : 'block';
+        if (desc.style.display === 'block') desc.focus();
+    }
+</script>
+{% endblock %}

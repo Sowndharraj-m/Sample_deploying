@@ -1,425 +1,302 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Welcome to MySite - A modern Django web application">
-    <title>MySite | Home</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends 'pages/base.html' %}
 
-        :root {
-            --primary: #6366f1;
-            --primary-light: #818cf8;
-            --primary-dark: #4f46e5;
-            --accent: #06b6d4;
-            --bg-dark: #0f172a;
-            --bg-card: rgba(255, 255, 255, 0.05);
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border: rgba(255, 255, 255, 0.08);
-        }
+{% block title %}MySite | Home{% endblock %}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+{% block extra_styles %}
+<style>
+    /* Hero */
+    .hero {
+        text-align: center;
+        padding: 100px 0 80px;
+        animation: fadeInUp 0.8s ease;
+    }
 
-        /* Animated gradient background */
-        .bg-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            background:
-                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.25), transparent),
-                radial-gradient(ellipse 60% 40% at 80% 50%, rgba(6, 182, 212, 0.12), transparent),
-                radial-gradient(ellipse 50% 50% at 20% 80%, rgba(139, 92, 246, 0.12), transparent);
-        }
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 50px;
+        font-size: 0.85rem;
+        color: var(--accent);
+        font-weight: 500;
+        margin-bottom: 32px;
+        backdrop-filter: blur(10px);
+    }
 
-        .bg-grid {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-        }
+    .badge::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
 
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
+    .hero h1 {
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -2px;
+        margin-bottom: 24px;
+    }
 
-        /* Navbar */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 24px 0;
-        }
+    .hero h1 span {
+        background: linear-gradient(135deg, var(--primary-light), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-light), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.5px;
-        }
+    .hero p {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto 48px;
+        line-height: 1.7;
+    }
 
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            list-style: none;
-        }
+    .hero-buttons {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
 
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.925rem;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
+    /* Stats bar */
+    .stats {
+        display: flex;
+        justify-content: center;
+        gap: 60px;
+        padding: 48px 0;
+        animation: fadeInUp 1s ease 0.2s both;
+    }
 
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
+    .stat {
+        text-align: center;
+    }
 
-        .nav-btn {
-            padding: 10px 24px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 0.925rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary-light), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
 
-        .nav-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
-        }
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+    }
 
-        /* Hero */
+    /* Features */
+    .features {
+        padding: 60px 0 80px;
+    }
+
+    .features-header {
+        text-align: center;
+        margin-bottom: 60px;
+        animation: fadeInUp 0.8s ease 0.3s both;
+    }
+
+    .features-header h2 {
+        font-size: 2.25rem;
+        font-weight: 700;
+        letter-spacing: -1px;
+        margin-bottom: 12px;
+    }
+
+    .features-header p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 24px;
+    }
+
+    .feature-card {
+        padding: 36px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        transition: all 0.4s;
+        animation: fadeInUp 0.8s ease 0.4s both;
+    }
+
+    .feature-card:nth-child(2) {
+        animation-delay: 0.5s;
+    }
+
+    .feature-card:nth-child(3) {
+        animation-delay: 0.6s;
+    }
+
+    .feature-card:hover {
+        border-color: rgba(99, 102, 241, 0.3);
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .feature-icon {
+        width: 52px;
+        height: 52px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .feature-card p {
+        color: var(--text-secondary);
+        line-height: 1.7;
+        font-size: 0.95rem;
+    }
+
+    /* CTA Section */
+    .cta {
+        text-align: center;
+        padding: 80px 0;
+        animation: fadeInUp 0.8s ease 0.5s both;
+    }
+
+    .cta-box {
+        padding: 60px;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.08));
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        backdrop-filter: blur(10px);
+    }
+
+    .cta-box h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+        letter-spacing: -1px;
+    }
+
+    .cta-box p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin-bottom: 32px;
+    }
+
+    @media (max-width: 768px) {
         .hero {
-            text-align: center;
-            padding: 100px 0 80px;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 50px;
-            font-size: 0.85rem;
-            color: var(--accent);
-            font-weight: 500;
-            margin-bottom: 32px;
-            backdrop-filter: blur(10px);
-        }
-
-        .badge::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            letter-spacing: -2px;
-            margin-bottom: 24px;
-        }
-
-        .hero h1 span {
-            background: linear-gradient(135deg, var(--primary-light), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 48px;
-            line-height: 1.7;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            padding: 16px 36px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn-secondary {
-            padding: 16px 36px;
-            background: var(--bg-card);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            backdrop-filter: blur(10px);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-
-        /* Features */
-        .features {
-            padding: 60px 0 100px;
-        }
-
-        .features-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .features-header h2 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 12px;
-        }
-
-        .features-header p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
+            padding: 60px 0 50px;
         }
 
         .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 24px;
+            grid-template-columns: 1fr;
         }
 
-        .feature-card {
-            padding: 36px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            transition: all 0.4s;
+        .stats {
+            gap: 30px;
+            flex-wrap: wrap;
         }
 
-        .feature-card:hover {
-            border-color: rgba(99, 102, 241, 0.3);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        .cta-box {
+            padding: 40px 24px;
         }
+    }
+</style>
+{% endblock %}
 
-        .feature-icon {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
-
-        .feature-card h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            font-size: 0.95rem;
-        }
-
-        /* Footer */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 32px 0;
-            text-align: center;
-        }
-
-        footer p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        footer a {
-            color: var(--primary-light);
-            text-decoration: none;
-        }
-
-        /* Floating orbs animation */
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 0;
-            animation: float 20s infinite ease-in-out;
-        }
-
-        .orb-1 {
-            width: 400px;
-            height: 400px;
-            background: rgba(99, 102, 241, 0.15);
-            top: 10%;
-            right: -10%;
-        }
-
-        .orb-2 {
-            width: 300px;
-            height: 300px;
-            background: rgba(6, 182, 212, 0.1);
-            bottom: 10%;
-            left: -5%;
-            animation-delay: -7s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(30px, -30px); }
-            50% { transform: translate(-20px, 20px); }
-            75% { transform: translate(20px, 10px); }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero { padding: 60px 0 50px; }
-            .features-grid { grid-template-columns: 1fr; }
-        }
-    </style>
-</head>
-<body>
-    <div class="bg-gradient"></div>
-    <div class="bg-grid"></div>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-
-    <div class="container">
-        <!-- Navbar -->
-        <nav>
-            <div class="logo">MySite</div>
-            <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="/admin/">Admin</a></li>
-            </ul>
-            <a href="/admin/" class="nav-btn">Dashboard →</a>
-        </nav>
-
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="badge">🚀 Powered by Django 6.0</div>
-            <h1>Build Something<br><span>Extraordinary</span></h1>
-            <p>Welcome to MySite — a modern web application built with Django. Fast, secure, and ready to scale with your ideas.</p>
-            <div class="hero-buttons">
-                <a href="/admin/" class="btn-primary">
-                    Go to Admin Panel →
-                </a>
-                <a href="#features" class="btn-secondary">
-                    Explore Features ↓
-                </a>
-            </div>
-        </section>
-
-        <!-- Features Section -->
-        <section class="features" id="features">
-            <div class="features-header">
-                <h2>Why Django?</h2>
-                <p>The web framework for perfectionists with deadlines</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Blazing Fast</h3>
-                    <p>Django is designed to help developers build applications as quickly as possible, from concept to completion.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Secure by Default</h3>
-                    <p>Django takes security seriously and helps developers avoid common security mistakes like SQL injection and XSS.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📈</div>
-                    <h3>Scalable</h3>
-                    <p>Some of the busiest sites on the web use Django's ability to quickly and flexibly scale to meet demand.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer>
-            <p>Built with ❤️ using <a href="https://www.djangoproject.com/" target="_blank">Django</a> • MySite © 2026</p>
-        </footer>
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="badge">🚀 Powered by Django 6.0</div>
+    <h1>Build Something<br><span>Extraordinary</span></h1>
+    <p>Welcome to MySite — a modern web application built with Django. Fast, secure, and ready to scale with your ideas.
+    </p>
+    <div class="hero-buttons">
+        {% if user.is_authenticated %}
+        <a href="/admin/" class="btn-primary">Go to Dashboard →</a>
+        <a href="#features" class="btn-secondary">Explore Features ↓</a>
+        {% else %}
+        <a href="{% url 'signup' %}" class="btn-primary">Get Started Free →</a>
+        <a href="{% url 'login' %}" class="btn-secondary">Sign In</a>
+        {% endif %}
     </div>
-</body>
-</html>
+</section>
+
+<!-- Stats -->
+<section class="stats">
+    <div class="stat">
+        <div class="stat-value">10K+</div>
+        <div class="stat-label">Developers</div>
+    </div>
+    <div class="stat">
+        <div class="stat-value">99.9%</div>
+        <div class="stat-label">Uptime</div>
+    </div>
+    <div class="stat">
+        <div class="stat-value">50ms</div>
+        <div class="stat-label">Avg Response</div>
+    </div>
+    <div class="stat">
+        <div class="stat-value">24/7</div>
+        <div class="stat-label">Support</div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features" id="features">
+    <div class="features-header">
+        <h2>Why Django?</h2>
+        <p>The web framework for perfectionists with deadlines</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Blazing Fast</h3>
+            <p>Django is designed to help developers build applications as quickly as possible, from concept to
+                completion.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Secure by Default</h3>
+            <p>Django takes security seriously and helps developers avoid common security mistakes like SQL injection
+                and XSS.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3>Scalable</h3>
+            <p>Some of the busiest sites on the web use Django's ability to quickly and flexibly scale to meet demand.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta">
+    <div class="cta-box">
+        {% if user.is_authenticated %}
+        <h2>Welcome back, {{ user.username }}! 🎉</h2>
+        <p>You're all set. Head to the admin dashboard to manage your application.</p>
+        <a href="/admin/" class="btn-primary">Open Dashboard →</a>
+        {% else %}
+        <h2>Ready to get started?</h2>
+        <p>Create your free account and start building in minutes.</p>
+        <a href="{% url 'signup' %}" class="btn-primary">Create Free Account →</a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
