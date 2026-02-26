@@ -63,3 +63,10 @@ python manage.py runserver
 - For more information on contributing, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 ## Versioning
 - We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](
+
+
+what is Django ?
+Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. Built by experienced developers, it takes care of much of the hassle of web development, so you can focus on writing your app without needing to reinvent the wheel. It’s free and open source.  
+
+what is framework ?
+A framework is a set of tools and libraries that provide a structure for building software applications. It helps developers to build applications faster and more efficiently by providing pre-built components and tools that can be used to build applications.  
